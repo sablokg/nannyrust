@@ -1,0 +1,12 @@
+[package]
+name = "nannyml_metrics"
+version = "0.1.0"
+edition = "2021"
+description = "Rust reimplementation of NannyML's univariate drift and performance-estimation metrics"
+license = "Apache-2.0"
+
+[dependencies]
+# Pure std implementation on purpose: no numpy/scipy equivalent needed.
+# Add `rayon` here later if you want to parallelize per-chunk / per-column computation.
+
+[dev-dependencies]
