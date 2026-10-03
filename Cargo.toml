@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 description = "Rust reimplementation of NannyML's univariate drift and performance-estimation metrics"
 license = "Apache-2.0"
+authors = ["Gaurav Sablok"]
+homepage = "https://codeberg.org/gsablok/nannyrust"
+repository = "https://codeberg.org/gsablok/nannyrust"
+keywords = ["bioinformatics","genomics"]
 
 [dependencies]
 # Pure std implementation on purpose: no numpy/scipy equivalent needed.
