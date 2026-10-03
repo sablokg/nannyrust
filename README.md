@@ -196,21 +196,3 @@ Measured above, relevant if you compare outputs or reuse thresholds tuned on Nan
 2. **Histogram binning differs from NumPy/NannyML** for JS and Hellinger: the Doane bin count is rounded (NumPy: ceiling), a distinct-value rule is applied (NumPy: none), and out-of-range analysis values are clamped into edge bins (NannyML: dropped, remaining mass placed in an extra bin). Differences reach about 0.01 at n ≈ 5,000 and 0.07 at n = 200.
 3. **No Yates correction** for 2 × 2 chi-squared tables; NannyML/SciPy apply it by default.
 4. **Exact KS and Wasserstein** at all sizes; NannyML approximates from 10,000 reference rows.
-
-## Known gaps
-
-1. **CBPE requires calibrated probabilities.** NannyML calibrates `y_pred_proba` against the reference set (typically via isotonic regression) before running CBPE. This crate does not implement a calibrator: feed it already-calibrated probabilities, or add one (e.g. pool-adjacent-violators for isotonic regression) upstream. See E3 and E5 for what happens otherwise.
-2. **DLE needs an auxiliary regression model.** NannyML trains a LightGBM model on the reference set to predict each row's error. Training that model is out of scope here. Implement the `LossEstimator` trait over whatever regressor you bring (`linfa`, `smartcore`, an FFI call to a trained LightGBM booster, etc.). This crate only implements the final reduction step (turning per-row predicted losses into MAE/MSE/RMSE estimates).
-3. **Binning is not NumPy-identical** (see Differences, item 2). A NumPy-compatible variant exists and matches NannyML to 5e-14, but is not yet merged.
-4. **Performance:** single-threaded; the reference is re-sorted and re-binned on every call and histogram bins are located by binary search (see E4).
-5. **Input handling:** inputs must be free of NaN values; the sorting code assumes this and will panic otherwise.
-6. **Scope:** univariate drift only; no multiple-testing correction, no alert thresholds, and chi-squared is the only measure that returns a p-value.
-7. **Evaluation scope:** benchmarks use simulated data plus one small non-genomic dataset with a synthetic perturbation; evaluation on real expression, methylation, variant or single-cell data has not been done.
-
-## Roadmap
-
-Isotonic calibrator · NumPy-compatible binning and base-2 JS option · optional Yates correction · cached reference structures and O(1) bin assignment · parallel evaluation across columns and chunks · multivariate drift measures.
-
-## License
-
-Apache-2.0
